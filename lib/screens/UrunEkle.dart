@@ -1,0 +1,70 @@
+import 'package:e_ticaret_app2/db/dbHelper.dart';
+import 'package:e_ticaret_app2/models/Urun.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class UrunEkle extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return UrunEkleState();
+  }
+}
+
+class UrunEkleState extends State {
+
+  DbHelper dbHelper = new DbHelper();
+
+  TextEditingController txtAd = new TextEditingController();
+  TextEditingController txtAciklama = new TextEditingController();
+  TextEditingController txtFiyat = new TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Ürün Ekleme Sayfası"),
+
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(13),
+        child: Column(
+          children: [
+            TextField(
+              controller: txtAd,
+              decoration: InputDecoration(labelText: "Adı"),
+            ),
+            TextField(
+              controller: txtAciklama,
+              decoration: InputDecoration(labelText: "Açıklaması"),
+            ),
+            TextField(
+              controller: txtFiyat,
+              decoration: InputDecoration(labelText: "Fiyatı"),
+            ),
+            TextButton(
+                onPressed: (){
+                  ekle();
+                },
+                child: Text("Kaydet")),
+
+          ],
+        ),
+      ) ,
+
+    );
+  }
+
+  void ekle() async {
+    int sonuc = await dbHelper.ekle(Urun(txtAd.text, txtAciklama.text, double.tryParse(txtFiyat.text)));
+    if (sonuc !=0 ){
+      Navigator.pop(context,true);
+      AlertDialog alertDialog = new AlertDialog(
+        title: Text("İşlem Başarılı"),
+        content: Text("${txtAd.text} ürünü başarıyla eklendi"),
+      );
+      showDialog(context: context, builder: (context)=> alertDialog);
+    }
+  }
+}
